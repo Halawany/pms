@@ -1,22 +1,12 @@
+# urls.py
 from django.urls import path
-from .views import (
-    EmployeeCreateView, DepartmentCreateView, SectionCreateView, TemplateCreateView,
-    MetricCategoryCreateView, MetricCreateView, MetricCreateView,
-    EmployeeMetricScoreCreateView, EvaluationCreateView, 
-    EmployeeEvaluationCreateView, ApprovalCreateView
-)
+from . import views
 
 urlpatterns = [
-    path('newemployee/', EmployeeCreateView.as_view(), name='new-employee'),
-    path('newdepartment/', DepartmentCreateView.as_view(), name='new-department'),
-    path('newsection/', SectionCreateView.as_view(), name='new-section'),
-    path('newtemplate/', TemplateCreateView.as_view(), name='new-template'),
-    path('newcategory/', MetricCategoryCreateView.as_view(), name='new-category'),
-    path('newmetric/', MetricCreateView.as_view(), name='new-metric'),
-    path('employeemetricscore/', EmployeeMetricScoreCreateView.as_view(), name='new-score-record'),
-    path('evaluation/', EvaluationCreateView.as_view(), name='evaluation'),
-    path('employeeevaluation/', EmployeeEvaluationCreateView.as_view(), name='employee-evaluation'),
-    path('approval/', ApprovalCreateView.as_view(), name='employee-approval'),
-    
+    path('templates/', views.TemplateListView.as_view(), name='template_list'),
+    path('templates/create/', views.TemplateCreateView.as_view(), name='template_create'),
+    path('evaluations/', views.EvaluationListView.as_view(), name='evaluation_list'),
+    path('evaluations/create/', views.EvaluationCreateView.as_view(), name='evaluation_create'),
+    path('evaluations/<int:evaluation_id>/employee/<str:employee_id>/', views.EmployeeEvaluationView.as_view(), name='employee_evaluation'),
+    path('approval/<int:employee_evaluation_id>/', views.ApprovalView.as_view(), name='approval'),
 ]
-

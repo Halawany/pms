@@ -1,0 +1,13 @@
+{% extends 'pms/base.html' %}
+
+{% block content %}
+<h1>Evaluation Templates</h1>
+<a href="{% url 'template_create' %}">Create New Template</a>
+<ul>
+    {% for template in templates %}
+    <li>{{ template.name }} ({{ template.employee_level }})</li>
+    {% empty %}
+    <li>No templates available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

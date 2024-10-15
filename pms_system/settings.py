@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'pms_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pmssystem',
+        'NAME': 'pms',
         'USER': 'pmssystem',
         'PASSWORD': 'eslam010',
         'HOST': 'localhost',

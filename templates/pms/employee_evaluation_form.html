@@ -1,0 +1,16 @@
+{% extends 'pms/base.html' %}
+
+{% block content %}
+<h1>Employee Evaluation</h1>
+<h2>{{ employee_evaluation.employee.full_name }} ({{ employee_evaluation.employee.hr_code }})</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for metric in metrics %}
+    <div>
+        <label for="id_metric_{{ metric.id }}">{{ metric.name }} (Weight: {{ metric.weight }}%)</label>
+        {{ form.fields.metric_metric.id }}
+    </div>
+    {% endfor %}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

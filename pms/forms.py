@@ -1,56 +1,54 @@
 from django import forms
-from .models import (
-   Employee, Department, Section, Template,
-   MetricCategory, Metric, EmployeeMetricScore,
-   Evaluation, EmployeeEvaluation, Approval
-)
+from .models import Template, MetricCategory, Metric, Evaluation, EmployeeEvaluation, EmployeeMetricScore, Approval
 
-class EmployeeCreationForm(forms.ModelForm):
-    class Meta:
-        model = Employee
-        fields = '__all__'
-
-class DepartmentCreationForm(forms.ModelForm):
-    class Meta:
-        model = Department
-        fields = '__all__'
-
-class SectionCreationForm(forms.ModelForm):
-    class Meta:
-        model = Section
-        fields = '__all__'
-
-class TemplateCreationForm(forms.ModelForm):
+class TemplateForm(forms.ModelForm):
     class Meta:
         model = Template
-        fields = ['template_name',]
+        fields = ['name', 'employee_level']
 
-class MetricCategoryCreationForm(forms.ModelForm):
+class MetricCategoryForm(forms.ModelForm):
     class Meta:
         model = MetricCategory
-        fields = '__all__'
+        fields = ['name', 'template', 'weight', 'category_type']
 
-class MetricCreationForm(forms.ModelForm):
+class MetricForm(forms.ModelForm):
     class Meta:
         model = Metric
-        fields = '__all__'
+        fields = ['name', 'category', 'weight', 'template']
 
-class EmployeeMetricScoreCreationForm(forms.ModelForm):
-    class Meta:
-        model = EmployeeMetricScore
-        fields = '__all__'
-
-class EvaluationCreationForm(forms.ModelForm):
+class EvaluationForm(forms.ModelForm):
     class Meta:
         model = Evaluation
-        fields = '__all__'
+        fields = ['year', 'start_date', 'end_date', 'status', 'template']
 
-class EmployeeEvaluationCreationForm(forms.ModelForm):
+class EmployeeEvaluationForm(forms.ModelForm):
     class Meta:
         model = EmployeeEvaluation
-        fields = '__all__'
+        fields = ['evaluation', 'employee']
 
-class ApprovalCreationForm(forms.ModelForm):
+class EmployeeMetricScoreForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeMetricScore
+        fields = ['metric', 'score']
+
+class ApprovalForm(forms.ModelForm):
     class Meta:
         model = Approval
-        fields = '__all__'
+        fields = ['manager_approval', 'hr_approval', 'employee_approval', 'manager_comments', 'hr_comments', 'employee_comments']
+
+class MetricFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super(MetricFormSet, self).__init__(*args, **kwargs)
+        self.queryset = Metric.objects.none()
+
+MetricFormSet = forms.modelformset_factory(
+    Metric, form=MetricForm, formset=MetricFormSet, extra=1, can_delete=True
+)
+
+EmployeeMetricScoreFormSet = forms.inlineformset_factory(
+    EmployeeEvaluation, 
+    EmployeeMetricScore, 
+    form=EmployeeMetricScoreForm, 
+    extra=0, 
+    can_delete=False
+)

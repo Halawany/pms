@@ -1,6 +1,14 @@
+<!-- templates/evaluation/approval_form.html -->
+{% extends 'pms/base.html' %}
+
+{% block content %}
+<h1>Approval</h1>
+<h2>{{ employee_evaluation.employee.full_name }} ({{ employee_evaluation.employee.hr_code }})</h2>
+<p>Total Score: {{ employee_evaluation.total_score }}</p>
+<p>Grade: {{ employee_evaluation.grade }}</p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save</button>
 </form>
-
+{% endblock %}

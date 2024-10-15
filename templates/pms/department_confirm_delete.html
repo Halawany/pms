@@ -1,7 +1,0 @@
-<h1>Delete Department</h1>
-<p>Are you sure you want to delete "{{ department }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Confirm</button>
-</form>
-<a href="{% url 'department_list' %}">Cancel</a>
