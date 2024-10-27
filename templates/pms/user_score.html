@@ -1,0 +1,7 @@
+<!-- evaluation_form.html -->
+<h2>Evaluation for {{ evaluation.name }} - {{ evaluation.year }}-{{ evaluation.month }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Evaluation</button>
+</form>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation Detail</title>
+</head>
+<body>
+<h1>Evaluation: {{ evaluation.name }}</h1>
+<p>Year: {{ evaluation.year }} | Month: {{ evaluation.month }}</p>
+
+<h2>Employee Metrics</h2>
+
+{% if employees %}
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Metric</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                {% for score in scores %}
+                    {% if score.employee == employee %}
+                        <tr>
+                            <td>{{ employee.full_name }}</td>
+                            <td>{{ score.metric.name }}</td>
+                            <td>{{ score.score }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No employees found.</p>
+{% endif %}
+
+</body>
+</html>

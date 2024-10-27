@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Score</title>
+</head>
+<body>
+    <h1>User Scores for Employee ID: {{ user_scores.first.employee.hr_code }}</h1>
+<p>Total Score: {{ total_score }}</p>
+<ul>
+    {% for score in user_scores %}
+        <li>Metric:{{ score.metric.category.name }} -  {{ score.metric.name }} - Score: {{ score.score }}</li>
+    {% endfor %}
+</ul>
+    
+</body>
+</html>

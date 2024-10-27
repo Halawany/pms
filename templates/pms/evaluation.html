@@ -1,0 +1,15 @@
+<!-- evaluation_form.html -->
+<h2>Evaluation for {{ evaluation.name }} - {{ evaluation.year }}-{{ evaluation.month }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+            <tr>
+                <td>{{ form.metric }}</td>
+                <td>{{ form.score }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Submit Evaluation</button>
+</form>
