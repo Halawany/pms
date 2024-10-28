@@ -10,7 +10,7 @@ class Employee(models.Model):
     full_name = models.CharField(max_length=500)
     hr_code = models.CharField(max_length=50)
     joining_date = models.DateField()
-    level = models.ManyToManyField(Level)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.full_name

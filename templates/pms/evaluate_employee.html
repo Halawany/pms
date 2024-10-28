@@ -1,0 +1,92 @@
+<!-- evaluate_employee.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluate Employee</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Evaluate Employee: {{ employee.full_name }}</h1>
+
+        <!-- Employee Data Table -->
+        <table class="table table-bordered mb-4">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Full Name</td>
+                    <td>{{ employee.full_name }}</td>
+                </tr>
+                <tr>
+                    <td>HR Code</td>
+                    <td>{{ employee.hr_code }}</td>
+                </tr>
+                <tr>
+                    <td>Joining Date</td>
+                    <td>{{ employee.joining_date }}</td>
+                </tr>
+                <tr>
+                    <td>Level</td>
+                    <td>{{ employee.level.name }}</td>  <!-- Assuming one level is associated -->
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Metrics Table -->
+        <h2 class="mb-3">Evaluation Metrics</h2>
+        {% if employee.level.name == 'Non-Manager' %}
+        <form method="POST" action="{% url 'submit_evaluation' employee.id %}">
+            {% csrf_token %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Metric</th>
+                        <th>User Score</th>
+                        <th>Metric Weight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for template in templates %}
+                        {% for category in template.category_set.all %}
+                            <tr>
+                                <td rowspan="{{ category.metric_set.count }}">{{ category.name }}</td>
+                                {% for metric in category.metric_set.all %}
+                                    {% if forloop.first %}
+                                        <td>{{ metric.name }}</td>
+                                        <td>
+                                            <input type="number" name="metric_{{ metric.id }}" class="form-control" min="0" max="100" required>
+                                        </td>
+                                        <td>{{ metric.metric_weight }}</td>
+                                    {% else %}
+                                        </tr>
+                                        <tr>
+                                            <td>{{ metric.name }}</td>
+                                            <td>
+                                                <input type="number" name="metric_{{ metric.id }}" class="form-control" min="0" max="100" required>
+                                            </td>
+                                            <td>{{ metric.metric_weight }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+        </form>
+        {% else %}
+        <p>Evaluations only for Non-Manager level</p>
+        {% endif %}
+    </div>
+</body>
+</html>
