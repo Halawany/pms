@@ -97,10 +97,12 @@ def evaluate_employee(request, employee_id):
         return render(request, 'pms/error.html', {'message': 'Non-Manager level not found.'})
 
     templates = Template.objects.filter(name='Non-Manager', evaluation__level=non_manager_level).prefetch_related('category_set__metric_set')
+    # evaluation = Evaluation.objects.filter(level=employee.level.name)
     
     context = {
         'employee': employee,
         'templates': templates,
+        # 'evaluation': evaluation,
     }
     return render(request, 'pms/evaluate_employee.html', context)
 

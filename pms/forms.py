@@ -1,6 +1,6 @@
 from django.forms import ModelForm, modelformset_factory, BaseFormSet
 
-from .models import Employee, Template, Evaluation, Category, Metric, UserScore
+from .models import Employee, Template, Evaluation, Category, Metric, UserScore, Level
 
 
 class EmployeeInsertForm(ModelForm):
@@ -16,7 +16,12 @@ class TemplateInsertForm(ModelForm):
 class EvaluationForm(ModelForm):
     class Meta:
         model = Evaluation
-        fields = '__all__'
+        fields = ['name', 'year', 'month', 'template', 'level']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['template'].queryset = Template.objects.all()
+        self.fields['level'].queryset = Level.objects.all()
 
 class CategoryForm(ModelForm):
     class Meta:
