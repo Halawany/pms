@@ -1,0 +1,57 @@
+<!-- templates/list_employees.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees List</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Employees</h1>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Full Name</th>
+                    <th>HR Code</th>
+                    <th>Joining Date</th>
+                    <th>Level</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.full_name }}</td>
+                    <td>{{ employee.hr_code }}</td>
+                    <td>{{ employee.joining_date }}</td>
+                    <td>{{ employee.level }}</td>
+                    <td>
+                        {% for id, status in evaluations_status %}
+                            {% if id == employee.id %}
+                                {% if status == "edit" %}
+                                    <a href="{% url 'evaluate_employee' evaluation_id=evaluation_id employee_id=employee.id %}" class="btn btn-warning btn-sm">
+                                        Edit User Evaluation
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'evaluate_employee' evaluation_id=evaluation_id employee_id=employee.id %}" class="btn btn-primary btn-sm">
+                                        Evaluate Employee
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

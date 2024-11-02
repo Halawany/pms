@@ -18,16 +18,22 @@ class Employee(models.Model):
 class Template(models.Model):
     name = models.CharField(max_length=100)
     weight = models.PositiveSmallIntegerField()
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class Evaluation(models.Model):
+    status_choices = [
+        ('running', 'Running'),
+        ('closed', 'Closed')
+    ]
     name = models.CharField(max_length=100)
     year = models.PositiveSmallIntegerField()
     month = models.PositiveIntegerField()
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     level = models.ForeignKey(Level, on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=status_choices, default='running')
 
     def __str__(self):
         return f"{self.name} In duration of {self.year}-{self.month}"
