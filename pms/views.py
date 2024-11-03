@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404, redirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views.generic import CreateView, View, DetailView, ListView
 from django.db.models import Sum
+from django.contrib import messages
 from .models import Employee, Template, Evaluation, Category, Metric, Level, UserScore
 from .forms import EmployeeInsertForm, TemplateInsertForm, EvaluationForm, CategoryForm, MetricForm, UserScoreForm, UserScoreFormSet
 
@@ -167,8 +168,6 @@ def user_score_view(request, employee_id):
     return render(request, 'pms/user_score.html', context)
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Employee, Metric, UserScore, Evaluation
 
 def evaluate_employee(request, evaluation_id, employee_id):
     # Fetch the employee and evaluation instances
@@ -206,23 +205,24 @@ def submit_evaluation(request, evaluation_id, employee_id):
     # Fetch the employee and evaluation instances
     employee = get_object_or_404(Employee, id=employee_id)
     evaluation = get_object_or_404(Evaluation, id=evaluation_id)
-
+    status = evaluation.status
     # Fetch metrics related to the evaluation's template
     metrics = Metric.objects.filter(category__template=evaluation.template)
-
-    if request.method == 'POST':
-        # Process the submitted scores
-        for metric in metrics:
-            score = request.POST.get(f'score_{metric.id}')
-            if score:
-                UserScore.objects.update_or_create(
-                    employee=employee,
-                    metric=metric,
-                    evaluation=evaluation,
-                    defaults={'score': score}
-                )
-        return redirect('list_employees')  # Redirect to your desired page
-
+    if status == 'running':
+        if request.method == 'POST':
+            # Process the submitted scores
+            for metric in metrics:
+                score = request.POST.get(f'score_{metric.id}')
+                if score:
+                    UserScore.objects.update_or_create(
+                        employee=employee,
+                        metric=metric,
+                        evaluation=evaluation,
+                        defaults={'score': score}
+                    )
+            return redirect('list_employees')  # Redirect to your desired page
+    else:
+        return HttpResponse("Evaluation status is closed")
     return redirect('pms/evaluate_employee', evaluation_id=evaluation.id, employee_id=employee.id)  # Redirect back to the evaluation page if not POST
 def list_employees(request):
     # Get all employees from the database
@@ -249,4 +249,106 @@ def list_employees(request):
         'employees': employees,
         'evaluations_status': evaluations_status,
         'evaluation_id': evaluation.id if evaluation else None  # Pass the evaluation ID to the template
+    })
+
+
+# def evo_employee(request, employee_id):
+#     employee = get_object_or_404(Employee, id=employee_id)
+#     emp_level = employee.level
+#     print(emp_level)
+#     evaluation = Evaluation.objects.get(level=emp_level)
+#     print(evaluation.template.id)
+#     template = get_object_or_404(Template, id=evaluation.template.id)
+#     print(template.name, template.id)
+#     metrics = Metric.objects.filter(category__template=evaluation.template.id)
+#     print(metrics)
+#     for metric in metrics:
+#         print(metric.name)
+#     if request.method == 'POST':
+#         for metric in metrics:
+#             score = request.POST.get(f'score_{metric.id}')
+#             print(metric)            
+#             if score is not None:  
+#                 UserScore.objects.update_or_create(
+#                     employee=employee,
+#                     metric=metric,
+#                     evaluation=evaluation,
+#                     defaults={'score': score}
+#                 )
+#         return redirect('list_employees') 
+
+#     return render(request, 'pms/copy.html', {
+#         'employee': employee,
+#         'evaluation': evaluation,
+#         'metrics': metrics,
+        
+#     })
+
+
+# def evo_employee(request, employee_id):
+#     employee = get_object_or_404(Employee, id=employee_id)
+#     employee_level = employee.level
+    
+#     try:
+#         evaluation = Evaluation.objects.get(level=employee_level)
+#         template = get_object_or_404(Template, id=evaluation.template.id)
+#     except Evaluation.DoesNotExist:
+#         return HttpResponseNotFound("Evaluation not found.")
+    
+#     metrics = Metric.objects.filter(category__template=evaluation.template.id)
+
+#     if request.method == 'POST':
+#         for metric in metrics:
+#             score = request.POST.get(f'score_{metric.id}')
+#             if score is not None:
+#                 try:
+#                     score_value = float(score)  # Convert score to float
+#                     UserScore.objects.update_or_create(
+#                         employee=employee,
+#                         metric=metric,
+#                         evaluation=evaluation,
+#                         defaults={'score': score_value}
+#                     )
+#                 except ValueError:
+#                     # Handle invalid score input, e.g., log or notify user
+#                     print(f"Invalid score for metric {metric.id}: {score}")
+
+#         messages.success(request, 'Scores updated successfully.')  # Feedback message
+#         return redirect('list_employees') 
+
+#     return render(request, 'pms/copy.html', {
+#         'employee': employee,
+#         'evaluation': evaluation,
+#         'metrics': metrics,
+#     })
+
+def evo_employee(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    employee_level = employee.level
+    evaluation = get_object_or_404(Evaluation, level=employee_level)
+    
+    # Fetch metrics and existing scores
+    metrics = Metric.objects.filter(category__template=evaluation.template.id)
+    existing_scores = {us.metric.id: us.score for us in UserScore.objects.filter(employee=employee, evaluation=evaluation)}
+
+    if request.method == 'POST':
+        form = EvaluationForm(request.POST, metrics=metrics, existing_scores=existing_scores)
+        if form.is_valid():
+            for metric in metrics:
+                score = form.cleaned_data[f'score_{metric.id}']
+                UserScore.objects.update_or_create(
+                    employee=employee,
+                    metric=metric,
+                    evaluation=evaluation,
+                    defaults={'score': score}
+                )
+            messages.success(request, 'Scores updated successfully.')
+            return redirect('list_employees')
+    else:
+        form = EvaluationForm(metrics=metrics, existing_scores=existing_scores)
+
+    return render(request, 'pms/copy.html', {
+        'form': form,
+        'employee': employee,
+        'evaluation': evaluation,
     })

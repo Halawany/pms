@@ -1,4 +1,4 @@
-from django.forms import ModelForm, modelformset_factory, BaseFormSet
+from django.forms import ModelForm, modelformset_factory, BaseFormSet, Form, DecimalField
 
 from .models import Employee, Template, Evaluation, Category, Metric, UserScore, Level
 
@@ -13,16 +13,19 @@ class TemplateInsertForm(ModelForm):
         model = Template
         fields = '__all__'
 
-class EvaluationForm(ModelForm):
-    class Meta:
-        model = Evaluation
-        fields = ['name', 'year', 'month', 'template', 'level']
-
+class EvaluationForm(Form):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['template'].queryset = Template.objects.all()
-        self.fields['level'].queryset = Level.objects.all()
-
+        metrics = kwargs.pop('metrics', [])
+        existing_scores = kwargs.pop('existing_scores', {})
+        super().__init__(*args, **kwargs)  # Call the parent's constructor
+        
+        for metric in metrics:
+            self.fields[f'score_{metric.id}'] = DecimalField(
+                label=metric.name,
+                initial=existing_scores.get(metric.id, ''),
+                required=True,
+                min_value=0,  # Adjust as needed
+            )
 class CategoryForm(ModelForm):
     class Meta:
         model = Category

@@ -32,11 +32,11 @@
                         {% for id, status in evaluations_status %}
                             {% if id == employee.id %}
                                 {% if status == "edit" %}
-                                    <a href="{% url 'evaluate_employee' evaluation_id=evaluation_id employee_id=employee.id %}" class="btn btn-warning btn-sm">
+                                    <a href="{% url 'evo-copy' employee_id=employee.id %}" class="btn btn-warning btn-sm">
                                         Edit User Evaluation
                                     </a>
                                 {% else %}
-                                    <a href="{% url 'evaluate_employee' evaluation_id=evaluation_id employee_id=employee.id %}" class="btn btn-primary btn-sm">
+                                    <a href="{% url 'evo-copy'  employee_id=employee.id %}" class="btn btn-primary btn-sm">
                                         Evaluate Employee
                                     </a>
                                 {% endif %}

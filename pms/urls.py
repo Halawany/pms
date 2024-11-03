@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     EmployeeCreateView, TemplateCreateView, EvaluationCreateView, CategoryCreateView,
     MetricCreateView,EvaluationView, EmployeeScoreView, EvaluationDetailView,
-    evaluate_employee, success_page, user_score_view, list_employees, submit_evaluation,
+    evaluate_employee, success_page, user_score_view, list_employees, submit_evaluation,evo_employee,
     #submit_evaluation
 )
 
@@ -18,10 +18,11 @@ urlpatterns = [
     # path('evaluate/<int:evaluation_id>/<int:employee_id>/', evaluate_employee, name='evaluate_employee'),
     # path('evaluate/submit/<int:employee_id>/', submit_evaluation, name='submit_evaluation'),
     path('success/', success_page, name='success_page'),
-    # path('user_score/<int:employee_id>/', user_score_view, name='user_score'),
+    path('user_score/<int:employee_id>/', user_score_view, name='user_score'),
     # path('evalaute/<int:evaluation_id>', EvaluationView.as_view(), name='employee-evaluation'),
     path('employees/', list_employees, name='list_employees'),
     path('evaluate/<int:evaluation_id>/<int:employee_id>/', evaluate_employee, name='evaluate_employee'),
     path('submit_evaluation/<int:evaluation_id>/<int:employee_id>/', submit_evaluation, name='submit_evaluation'),
+    path('evo/<int:employee_id>/', evo_employee, name='evo-copy'),
 
 ]
