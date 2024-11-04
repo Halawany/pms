@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+        }
+        #content {
+            margin-left: 250px; /* space for the sidebar */
+            padding: 20px;
+            width: calc(100% - 250px); /* adjust width */
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h1 class="h4 mb-4">Dashboard Sections</h1>
+        <nav>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{% url 'add-employee' %}" class="nav-link text-white">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'add-template' %}" class="nav-link text-white">Evaluations</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'add-employee' %}" class="nav-link text-white">Templates</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'add-category' %}" class="nav-link text-white">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'add-metirc' %}" class="nav-link text-white">Metrics</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="content">
+        <h1 class="h3 mb-4">Dashboard</h1>
+        
+        <!-- Dashboard Statistics Section -->
+        <div class="dashboard-grid mb-4">
+            <div class="stat-card">
+                <h4>Total Employees</h4>
+                <p>150</p>
+            </div>
+            <div class="stat-card">
+                <h4>Active Evaluations</h4>
+                <p>30</p>
+            </div>
+            <div class="stat-card">
+                <h4>Templates Created</h4>
+                <p>12</p>
+            </div>
+            <div class="stat-card">
+                <h4>Categories</h4>
+                <p>5</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Metrics</h4>
+                <p>8</p>
+            </div>
+        </div>
+
+        <!-- Employee Management Section -->
+        <div id="employees" class="mb-4">
+            <h2 class="h4 mb-4">Employee Management</h2>
+            <div class="mb-4">
+                <input type="text" placeholder="Search Employees..." class="form-control" id="searchBar">
+            </div>
+            <button id="addEmployee" class="btn btn-success mb-3">Add Employee</button>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>HR Code</th>
+                        <th>Joining Date</th>
+                        <th>Level</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTable">
+                    <!-- Example row -->
+                    <tr>
+                        <td>John Doe</td>
+                        <td>HR001</td>
+                        <td>2020-01-15</td>
+                        <td>Manager</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Evaluations Section -->
+        <div id="evaluations" class="mb-4">
+            <h2 class="h4 mb-4">Evaluations</h2>
+            <button id="addEvaluation" class="btn btn-success mb-3">Add Evaluation</button>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Evaluation Name</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="evaluationTable">
+                    <tr>
+                        <td>Annual Review</td>
+                        <td>2023-10-01</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('addEmployee').onclick = function() {
+                alert('Add Employee functionality goes here.');
+            };
+            document.getElementById('addEvaluation').onclick = function() {
+                alert('Add Evaluation functionality goes here.');
+            };
+        });
+    </script>
+</body>
+</html>
