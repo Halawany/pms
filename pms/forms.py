@@ -1,12 +1,20 @@
 from django.forms import ModelForm, modelformset_factory, BaseFormSet, Form, DecimalField
-
+from django import forms
 from .models import Employee, Template, Evaluation, Category, Metric, UserScore, Level
 
 
-class EmployeeInsertForm(ModelForm):
+class EmployeeInsertForm(forms.ModelForm):
     class Meta:
         model = Employee
-        fields = '__all__'
+        fields = '__all__'  # Include all fields from the Employee model
+    
+    # Customize the widgets to add CSS classes
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Add 'form-control' class to all form fields automatically
+        for field in self.fields.values():
+            field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' form-control'
 
 class TemplateInsertForm(ModelForm):
     class Meta:

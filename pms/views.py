@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, View, DetailView, ListView
 from django.db.models import Sum
 from django.contrib import messages
@@ -11,6 +11,13 @@ class EmployeeCreateView(CreateView):
     model = Employee
     template_name = "pms/add-employee.html"
     form_class = EmployeeInsertForm
+    success_url = reverse_lazy('employee-list')  # Redirect after successful form submission
+
+    # Add levels to context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['levels'] = Level.objects.all()  # Get all levels to pass to the template
+        return context
 
 class TemplateCreateView(CreateView):
     model = Template
@@ -352,3 +359,7 @@ def evo_employee(request, employee_id):
         'employee': employee,
         'evaluation': evaluation,
     })
+
+def employee_list(request):
+    employee = Employee.objects.all()
+    return render(request, 'pms/list_employees.html', {'employees': employee})
