@@ -37,8 +37,8 @@
                             <td>{{ employee.level.name }}</td>
                             <td>
                                 <!-- Edit Button (Use a valid URL when implementing edit functionality) -->
-                                <a href="" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
+                                <a href="{% url 'evo-copy' employee.id %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Evaluate
                                 </a>
 
                                 <!-- Delete Button (Ensure the delete URL is correctly implemented) -->

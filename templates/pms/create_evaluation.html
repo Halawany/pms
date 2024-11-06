@@ -1,0 +1,114 @@
+{% extends 'pms/base.html' %}
+
+{% block title %}Create Evaluation{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Create New Evaluation</h2>
+
+    <!-- Form Container -->
+    <form method="post" class="shadow p-4 bg-white rounded">
+        {% csrf_token %}
+        
+        <!-- Name Field -->
+        <div class="form-group">
+            <label for="id_name">Name</label>
+            <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value }}">
+            {% if form.name.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Year Field -->
+        <div class="form-group">
+            <label for="id_year">Year</label>
+            <input type="number" name="year" class="form-control" id="id_year" value="{{ form.year.value }}">
+            {% if form.year.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.year.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Month Field -->
+        <div class="form-group">
+            <label for="id_month">Month</label>
+            <input type="number" name="month" class="form-control" id="id_month" value="{{ form.month.value }}">
+            {% if form.month.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.month.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Template Field -->
+        <div class="form-group">
+            <label for="id_template">Template</label>
+            <select name="template" class="form-control" id="id_template">
+                <option value="">Select Template</option>
+                {% for template in form.template.field.queryset %}
+                    <option value="{{ template.id }}" {% if template.id == form.template.value %}selected{% endif %}>
+                        {{ template.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if form.template.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.template.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Level Field -->
+        <div class="form-group">
+            <label for="id_level">Level</label>
+            <select name="level" class="form-control" id="id_level">
+                <option value="">Select Level</option>
+                {% for level in form.level.field.queryset %}
+                    <option value="{{ level.id }}" {% if level.id == form.level.value %}selected{% endif %}>
+                        {{ level.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if form.level.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.level.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Status Field -->
+        <div class="form-group">
+            <label for="id_status">Status</label>
+            <select name="status" class="form-control" id="id_status">
+                <option value="running" {% if form.status.value == 'running' %}selected{% endif %}>Running</option>
+                <option value="closed" {% if form.status.value == 'closed' %}selected{% endif %}>Closed</option>
+            </select>
+            {% if form.status.errors %}
+                <div class="text-danger mt-2">
+                    {% for error in form.status.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Create Evaluation</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

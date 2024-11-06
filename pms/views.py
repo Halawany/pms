@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, View, DetailView, ListView
+from django.views.generic import CreateView, View, DetailView, ListView, UpdateView
 from django.db.models import Sum
 from django.contrib import messages
 from .models import Employee, Template, Evaluation, Category, Metric, Level, UserScore
-from .forms import EmployeeInsertForm, TemplateInsertForm, EvaluationForm, CategoryForm, MetricForm, UserScoreForm, UserScoreFormSet
+from .forms import EmployeeInsertForm, TemplateInsertForm, EvaluationForm, CategoryForm, MetricForm, UserScoreForm, UserScoreFormSet, EvaluationInsertForm
 
 class EmployeeCreateView(CreateView):
     model = Employee
@@ -24,10 +24,25 @@ class TemplateCreateView(CreateView):
     template_name = 'pms/add-template.html'
     form_class = TemplateInsertForm
 
+class EvaluationListVieww(ListView):
+    model = Evaluation
+    template_name = 'pms/list_evalautions.html'
+    context_object_name = 'evaluations'
+
 class EvaluationCreateView(CreateView):
     model = Evaluation
-    template_name = 'pms/evaluation.html'
-    form_class = EvaluationForm
+    template_name = 'pms/create_evaluation.html'
+    form_class = EvaluationInsertForm
+
+class EvaluationUpdateView(UpdateView):
+    model = Evaluation
+    form_class = EvaluationInsertForm
+    template_name = 'pms/edit_evaluation.html'  # Template to render the form
+    context_object_name = 'evaluation'
+    
+    def get_success_url(self):
+        # Redirect to the evaluations list after successful update
+        return reverse_lazy('list_evaluation')  # You can change this URL name if necessary
 
 class CategoryCreateView(CreateView):
     model = Category

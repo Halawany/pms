@@ -123,7 +123,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'add-employee' %}" class="{% if request.path == '/add-employee/' %}active{% endif %}">
+                    <a href="{% url 'add-employee' %}" class="{% if request.path == '/employees/add/' %}active{% endif %}">
                         <i class="fas fa-user-plus icon"></i> Add Employee
                     </a>
                 </li>
@@ -160,12 +160,12 @@
         <div id="evaluation" class="collapse">
             <ul class="list-unstyled">
                 <li>
-                    <a href="" class="{% if request.path == '/evaluations/' %}active{% endif %}">
+                    <a href="{% url 'list_evaluation' %}" class="{% if request.path == '/evaluations/' %}active{% endif %}">
                         <i class="fas fa-file-alt icon"></i> List All Evaluations
                     </a>
                 </li>
                 <li>
-                    <a href="" class="{% if request.path == '/create-evaluation/' %}active{% endif %}">
+                    <a href="{% url 'create_evaluation' %}" class="{% if request.path == '/evaluations/create/' %}active{% endif %}">
                         <i class="fas fa-plus icon"></i> Create Evaluation
                     </a>
                 </li>

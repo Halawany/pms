@@ -1,0 +1,20 @@
+<!-- edit_evaluation.html -->
+{% extends 'pms/base.html' %}
+
+{% block title %}Edit Evaluation{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2 class="mb-4">Edit Evaluation</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render the form fields -->
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'list_evaluation' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

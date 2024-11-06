@@ -1,0 +1,56 @@
+{% extends 'pms/base.html' %}
+
+{% block title %}Evaluations List{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <h2 class="mb-4">All Evaluations</h2>
+
+    <!-- Table container for better responsiveness -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>Template</th>
+                    <th>Level</th>
+                    <th>Status</th>
+                    <th>Actions</th> <!-- Added for the Edit button -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for evaluation in evaluations %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ evaluation.name }}</td>
+                    <td>{{ evaluation.year }}</td>
+                    <td>{{ evaluation.month }}</td>
+                    <td>{{ evaluation.template.name }}</td> <!-- Assuming Template has a 'name' field -->
+                    <td>{{ evaluation.level.name }}</td> <!-- Assuming Level has a 'name' field -->
+                    <td>
+                        {% if evaluation.status == 'running' %}
+                            <span class="badge badge-warning">{{ evaluation.status|capfirst }}</span>
+                        {% elif evaluation.status == 'closed' %}
+                            <span class="badge badge-success">{{ evaluation.status|capfirst }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- Edit Button with Bootstrap Styling -->
+                        <a href="{% url 'edit_evaluation' evaluation.pk %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No evaluations available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

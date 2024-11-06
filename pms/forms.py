@@ -16,6 +16,16 @@ class EmployeeInsertForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' form-control'
 
+class EvaluationInsertForm(forms.ModelForm):
+    class Meta:
+        model = Evaluation
+        fields = ['name', 'year', 'month', 'template', 'level', 'status']
+
+        widgets = {
+            'year': forms.NumberInput(attrs={'min': 1900, 'max': 2100}),
+            'month': forms.Select(choices=[(i, i) for i in range(1, 13)]),
+            'status': forms.Select(choices=Evaluation.status_choices),
+        }
 class TemplateInsertForm(ModelForm):
     class Meta:
         model = Template
