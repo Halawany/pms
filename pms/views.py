@@ -24,6 +24,11 @@ class TemplateCreateView(CreateView):
     template_name = 'pms/add-template.html'
     form_class = TemplateInsertForm
 
+class TemplateListView(ListView):
+    model = Template
+    template_name = 'pms/templates.html'
+    context_object_name = 'templates'
+
 class EvaluationListVieww(ListView):
     model = Evaluation
     template_name = 'pms/list_evalautions.html'
