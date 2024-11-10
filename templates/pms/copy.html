@@ -1,51 +1,13 @@
 {% extends 'pms/base.html' %}
+{% load custom_filters %}
+
 {% block title %}
-Evalaute {{employee.hr_code}}
+    Evaluate {{ employee.hr_code }}
 {% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <table class="table table-sm table-bordered mb-4">
-        <tbody>
-            <tr>
-                <td><strong>Name:</strong></td>
-                <td>{{ employee.full_name }}</td>
-            </tr>
-            <tr>
-                <td><strong>HR-Code:</strong></td>
-                <td>{{ employee.hr_code }}</td>
-            </tr>
-            <tr>
-                <td><strong>Level:</strong></td>
-                <td>{{ employee.level }}</td>
-            </tr>
-            <tr>
-                <td><strong>Evaluation Template:</strong></td>
-                <td>{{ evaluation.name }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.non_field_errors }}
-            {% for field in form %}
-                <div class="form-row align-items-center mb-3">
-                    <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
-                    <div class="col-sm-9">
-                        {{ field }}
-                        {{ field.errors }}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-    <a href="{% url 'list_employees' %}" class="btn btn-secondary mt-3">Back to Employee List</a>
-
-    <!-- Optional: Display messages -->
     {% if messages %}
-        <div class="alert alert-info mt-3">
+        <div class="alert alert-danger mt-3">
             <ul class="mb-0">
             {% for message in messages %}
                 <li>{{ message }}</li>
@@ -53,5 +15,96 @@ Evalaute {{employee.hr_code}}
             </ul>
         </div>
     {% endif %}
-</div>
+    
+    <div class="container mt-5">
+        <!-- Employee Information Table -->
+        <table class="table table-sm table-bordered mb-4">
+            <tbody>
+                <tr>
+                    <td><strong>Name:</strong></td>
+                    <td>{{ employee.full_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>HR-Code:</strong></td>
+                    <td>{{ employee.hr_code }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Level:</strong></td>
+                    <td>{{ employee.level }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Evaluation Template:</strong></td>
+                    <td>{{ evaluation.name }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Evaluation Form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Metrics Table -->
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Category</th>
+                        <th>Metric</th>
+                        <th>Metric Weight</th>
+                        <th>Your Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% regroup metrics by category as category_list %}
+                    {% for category in category_list %}
+                        <tr class="table-secondary">
+                            <td colspan="4"><strong>{{ category.grouper.name }} (Total Weight: {{ category.grouper.weight }})</strong></td>
+                        </tr>
+                        {% for metric in category.list %}
+                            <tr>
+                                <td></td>
+                                <td>{{ metric.name }}</td>
+                                <td class="text-center">{{ metric.metric_weight }}</td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="number" 
+                                               name="score_{{ metric.id }}" 
+                                               {% if existing_scores %}
+                                                   value="{{ existing_scores|get_item:metric.id }}"
+                                               {% endif %}
+                                               class="form-control"
+                                               min="0"
+                                               max="{{ metric.metric_weight }}"
+                                               required
+                                               oninput="validateScore(this, {{ metric.metric_weight }})"
+                                        />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">/ {{ metric.metric_weight }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+                <a href="{% url 'list_employees' %}" class="btn btn-secondary">Back to Employee List</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Add JavaScript for real-time validation -->
+    <script>
+        function validateScore(input, maxWeight) {
+            if (parseInt(input.value) > maxWeight) {
+                input.setCustomValidity(`Score cannot exceed ${maxWeight}`);
+            } else if (parseInt(input.value) < 0) {
+                input.setCustomValidity('Score cannot be negative');
+            } else {
+                input.setCustomValidity('');
+            }
+        }
+    </script>
 {% endblock %}

@@ -4,6 +4,15 @@
 
 {% block body %}
 <div class="container my-4">
+    {% if messages %}
+                <div class="alert alert-danger mt-3">
+                    <ul class="mb-0">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+             {% endif %}
     <h2 class="mb-4">All Evaluations</h2>
 
     <!-- Table container for better responsiveness -->
