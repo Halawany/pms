@@ -1,0 +1,18 @@
+{% if approval %}
+    <!-- HR Approval exists, show disabled button with "Approved" -->
+    <button class="btn btn-success btn-sm" disabled>
+        <i class="fa fa-check"></i> Approved
+    </button>
+    <div class="mt-2">
+        <strong>Final Score:</strong> {{ approval.final_score.score }}
+    </div>
+{% else %}
+    <!-- No HR Approval, show clickable HR Approval button -->
+    <form action="{% url 'hr-approval' employee.id %}" method="post" style="display:inline-block;">
+        {% csrf_token %}
+        <input type="hidden" name="evaluation_id" value="{{ evaluation.id }}">
+        <button type="submit" class="btn btn-success btn-sm">
+            <i class="fa fa-check"></i> HR Approval
+        </button>
+    </form>
+{% endif %}

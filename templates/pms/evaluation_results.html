@@ -1,0 +1,145 @@
+{% extends 'pms/base.html' %}
+
+{% block title %}Search Employee Evaluation{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4">Search Employee by HR Code</h2>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'search_employee' %}" id="search-form">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="hr_code" placeholder="Enter HR Code" value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+
+    {% if employee %}
+        <h3>Employee Details</h3>
+        <table class="table table-bordered" id="employee-details">
+            <tr>
+                <th>Full Name</th>
+                <td>{{ employee.full_name }}</td>
+            </tr>
+            <tr>
+                <th>HR Code</th>
+                <td>{{ employee.hr_code }}</td>
+            </tr>
+            <tr>
+                <th>Joining Date</th>
+                <td>{{ employee.joining_date }}</td>
+            </tr>
+            <tr>
+                <th>Level</th>
+                <td>{{ employee.level.name }}</td>
+            </tr>
+        </table>
+
+        {% if final_score %}
+            <h4>Evaluation Details</h4>
+            <table class="table table-bordered" id="evaluation-details">
+                <tr>
+                    <th>Evaluation name</th>
+                    <td>{{ evaluation.name }}</td>
+                </tr>
+                <tr>
+                    <th>Evaluation year</th>
+                    <td>{{ evaluation.year }}</td>
+                </tr>
+                <tr>
+                    <th>Evaluation month</th>
+                    <td>{{ evaluation.month }}</td>
+                </tr>
+                <tr>
+                    <th>Score</th>
+                    <td>{{ final_score.score }}</td>
+                </tr>
+                <tr>
+                    <th>Numeric score</th>
+                    <td>{{ final_score.final_score }}</td>
+                </tr>
+
+                <!-- Manager Approval styled as signature -->
+                <tr>
+                    <th>Manager Approval</th>
+                    <td class="signature">{{ evaluation.evaluator }}</td>
+                </tr>
+
+                <!-- HR Approval styled as signature -->
+                <tr>
+                    <th>HR Approval</th>
+                    <td class="signature">{{ approval.hr }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <div class="alert alert-info">No evaluation found for this employee.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">No employee found with the given HR Code.</div>
+    {% endif %}
+
+    <!-- Print Button -->
+    <button class="btn btn-secondary mt-3" onclick="printPage()">Print</button>
+</div>
+
+{% endblock %}
+
+{% block extra_head %}
+    <style>
+        /* Add this CSS for print formatting */
+        @media print {
+            /* Hide all content except for the tables */
+            body * {
+                visibility: hidden;
+            }
+            #employee-details, #evaluation-details, #employee-details * , #evaluation-details * {
+                visibility: visible;
+            }
+            /* Optional: Center content */
+            .container {
+                width: 100%;
+                padding: 0;
+            }
+        }
+
+        /* Signature Style */
+        .signature {
+            font-family: 'Brush Script MT', cursive, sans-serif; /* Handwritten-like font */
+            font-size: 25px;
+            font-weight: bold; /* Slightly larger to resemble a signature */
+            text-decoration: underline; /* Underline to mimic a signature line */
+            padding-bottom: 5px; /* Padding below to add space for the signature line */
+        }
+
+        /* Optionally, you can add a more formal "signature box" look */
+        .signature-box {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            padding: 0 50px;
+            font-family: 'Brush Script MT', cursive, sans-serif;
+            font-size: 20px;
+        }
+
+    </style>
+
+    <script>
+        function printPage() {
+            // Open a new print window and pass the content to print
+            var printWindow = window.open('', '_blank', 'width=800, height=600');
+            printWindow.document.write('<html><head><title>Print</title>');
+            printWindow.document.write('<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(document.getElementById('employee-details').outerHTML); // Copy the employee table
+            printWindow.document.write(document.getElementById('evaluation-details').outerHTML); // Copy the evaluation table
+            printWindow.document.write('</body></html>');
+            
+            printWindow.document.close(); // Close the document
+            printWindow.print(); // Trigger the print dialog
+            printWindow.close(); // Close the print window after printing
+        }
+    </script>
+{% endblock %}

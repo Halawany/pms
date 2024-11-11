@@ -1,0 +1,86 @@
+{% extends 'pms/base.html' %}
+
+{% block title %}
+    Metrics List
+{% endblock %}
+
+{% block extra_head %}
+    <!-- Optionally, you can add extra styles or scripts -->
+{% endblock %}
+
+{% block body %}
+{% if user.is_staff %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Metrics List</h4>
+        </div>
+        <div class="card-body">
+            <!-- Search Form (optional) -->
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search metrics by name..." value="{{ search_query }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Table of Metrics -->
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Weight</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for metric in metrics %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ metric.name }}</td>
+                            <td>{{ metric.metric_weight }}</td>
+                            <td>{{ metric.category.name }}</td>
+                            <td>
+                                <a href="{% url 'edit-metric' metric.id %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No metrics found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <span class="page-link">Page: {{ metrics.paginator.num_pages }}</span>
+                <span class="page-link">
+                    {% if metrics.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ metrics.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    {% if metrics.has_next %}
+                        <a href="?page={{ metrics.next_page_number }}">Next</a>
+                        <a href="?page={{ metrics.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            <br>
+
+            <!-- Add Metric Button -->
+            <a href="{% url 'add-metric' %}" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Add Metric
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

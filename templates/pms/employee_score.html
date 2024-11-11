@@ -1,0 +1,7 @@
+{% if final_score %}
+    <span class="badge bg-success">
+        {{ final_score.final_score }} ({{ final_score.score }})
+    </span>
+{% else %}
+    <span class="badge bg-secondary">Not calculated</span>
+{% endif %}

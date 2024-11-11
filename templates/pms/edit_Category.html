@@ -2,7 +2,7 @@
 {% load custom_filters %}
 
 {% block title %}
-    Add Metric
+    {% if object %} Edit Category {% else %} Add Category {% endif %}
 {% endblock %}
 
 {% block extra_head %}
@@ -14,34 +14,27 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-header">
-            <h4>Add New Metric</h4>
+            <h4>{% if object %} Edit Category {% else %} Add New Category {% endif %}</h4>
         </div>
         <div class="card-body">
-            <!-- Metric Form -->
+            <!-- Category Form -->
             <form method="post">
                 {% csrf_token %}
-                
-                <!-- Metric Name -->
                 <div class="form-group">
-                    <label for="id_name">Metric Name</label>
+                    <label for="id_name">Category Name</label>
                     {{ form.name|add_class:"form-control" }}
                 </div>
-
-                <!-- Metric Weight -->
                 <div class="form-group">
-                    <label for="id_metric_weight">Metric Weight</label>
-                    {{ form.metric_weight|add_class:"form-control" }}
+                    <label for="id_weight">Weight</label>
+                    {{ form.weight|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="id_template">Templates</label>
+                    {{ form.template|add_class:"form-control" }}
                 </div>
 
-                <!-- Category Selection -->
-                <div class="form-group">
-                    <label for="id_category">Category</label>
-                    {{ form.category|add_class:"form-control" }}
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-success">Save Metric</button>
-                <a href="{% url 'metrics' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-success">Save Category</button>
+                <a href="{% url 'categories' %}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

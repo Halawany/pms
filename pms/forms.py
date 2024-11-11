@@ -1,4 +1,5 @@
 from django.forms import ModelForm, modelformset_factory, BaseFormSet, Form, DecimalField
+from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from .models import Employee, Template, Evaluation, Category, Metric, UserScore, Level
 
@@ -80,3 +81,10 @@ class UserScoreFormSet(BaseFormSet):
 UserScoreFormSet = modelformset_factory(UserScore, form=UserScoreForm, extra=0)  # Set extra to 0 if you're using existing UserScores
 
 
+class TemplateCreateForm(ModelForm):
+    class Meta:
+        model = Template
+        fields = '__all__'
+
+class CustomLoginForm(AuthenticationForm):
+    remember_me = forms.BooleanField(required=False, label="Remember me")

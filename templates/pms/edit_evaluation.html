@@ -4,6 +4,7 @@
 {% block title %}Edit Evaluation{% endblock %}
 
 {% block body %}
+{% if user.is_staff %}
 <div class="container">
     <h2 class="mb-4">Edit Evaluation</h2>
 
@@ -17,4 +18,5 @@
         </div>
     </form>
 </div>
+{% endif %}
 {% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}Create Evaluation{% endblock %}
 
 {% block body %}
+{% if user.is_staff %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">Create New Evaluation</h2>
 
@@ -111,4 +112,5 @@
         </div>
     </form>
 </div>
+{% endif %}
 {% endblock %}

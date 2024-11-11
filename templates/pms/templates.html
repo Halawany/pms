@@ -5,15 +5,18 @@
 {% endblock %}
 
 {% block body %}
+{% if user.is_staff %}
 <div class="container mt-5">
     <h1 class="mb-4">Template List</h1>
     
     <!-- Button to Create New Template -->
-    <a href="{% url 'add-template' %}" class="btn btn-primary mb-3">Create New Template</a>
+    <a href="{% url 'add-template' %}" class="btn btn-primary mb-3">
+        <i class="fas fa-plus"></i> Create New Template
+    </a>
 
     <!-- Templates Table -->
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
             <tr>
                 <th>Name</th>
                 <th>Weight</th>
@@ -28,10 +31,13 @@
                 <td>{{ template.weight }}</td>
                 <td>{{ template.level }}</td>
                 <td>
-                    <!-- Actions (View, Edit, Delete) -->
-                    <a href="" class="btn btn-info btn-sm">View</a>
-                    <a href="" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this template?');">Delete</a>
+                    <!-- Action Buttons with Icons -->
+                    <div class="btn-group" role="group">
+                        <!-- Edit Button -->
+                        <a href="{% url 'edit-template' template.id %}" class="btn btn-warning btn-sm" title="Edit Template">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
                 </td>
             </tr>
             {% empty %}
@@ -42,5 +48,5 @@
         </tbody>
     </table>
 </div>
+{% endif %}
 {% endblock %}
-

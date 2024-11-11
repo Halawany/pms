@@ -3,6 +3,7 @@
 {% block title %}Evaluations List{% endblock %}
 
 {% block body %}
+{% if user.is_staff %}
 <div class="container my-4">
     {% if messages %}
                 <div class="alert alert-danger mt-3">
@@ -43,6 +44,8 @@
                         {% if evaluation.status == 'running' %}
                             <span class="badge badge-warning">{{ evaluation.status|capfirst }}</span>
                         {% elif evaluation.status == 'closed' %}
+                            <span class="badge badge-danger">{{ evaluation.status|capfirst }}</span>
+                        {% elif evaluation.status == 'Completed' %}
                             <span class="badge badge-success">{{ evaluation.status|capfirst }}</span>
                         {% endif %}
                     </td>
@@ -62,4 +65,5 @@
         </table>
     </div>
 </div>
+{% endif %}
 {% endblock %}

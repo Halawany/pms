@@ -1,12 +1,11 @@
 {% extends 'pms/base.html' %}
-{% load custom_filters %}
 
 {% block title %}
-    Add Template
+    Edit Template
 {% endblock %}
 
 {% block extra_head %}
-    <!-- Optionally include any additional styles here -->
+    <!-- You can include any extra CSS here if needed -->
 {% endblock %}
 
 {% block body %}
@@ -14,12 +13,12 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-header">
-            <h4>Add New Template</h4>
+            <h4>Edit Template</h4>
         </div>
         <div class="card-body">
-            <!-- Display success or error messages -->
+            <!-- Success Message -->
             {% if messages %}
-                <div class="alert alert-info">
+                <div class="alert alert-success">
                     <ul class="mb-0">
                     {% for message in messages %}
                         <li>{{ message }}</li>
@@ -27,13 +26,12 @@
                     </ul>
                 </div>
             {% endif %}
-
+            
             <form method="post">
                 {% csrf_token %}
-                
                 <div class="form-group">
                     <label for="id_name">Template Name</label>
-                    {{ form.name|add_class:"form-control" }}
+                    <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value }}" required>
                     {% if form.name.errors %}
                         <div class="text-danger">
                             {% for error in form.name.errors %}
@@ -45,7 +43,7 @@
 
                 <div class="form-group">
                     <label for="id_weight">Weight</label>
-                    {{ form.weight|add_class:"form-control" }}
+                    <input type="number" name="weight" class="form-control" id="id_weight" value="{{ form.weight.value }}" min="1" required>
                     {% if form.weight.errors %}
                         <div class="text-danger">
                             {% for error in form.weight.errors %}
@@ -57,7 +55,13 @@
 
                 <div class="form-group">
                     <label for="id_level">Level</label>
-                    {{ form.level|add_class:"form-control" }}
+                    <select name="level" class="form-control" id="id_level" required>
+                        {% for level in form.level.field.queryset %}
+                            <option value="{{ level.id }}" {% if level.id == form.level.value %} selected {% endif %}>
+                                {{ level.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
                     {% if form.level.errors %}
                         <div class="text-danger">
                             {% for error in form.level.errors %}
@@ -67,10 +71,8 @@
                     {% endif %}
                 </div>
 
-                <div class="form-group text-right">
-                    <button type="submit" class="btn btn-primary">Save Template</button>
-                    <a href="{% url 'templates' %}" class="btn btn-secondary ml-2">Cancel</a>
-                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'templates' %}" class="btn btn-secondary ml-2">Cancel</a>
             </form>
         </div>
     </div>

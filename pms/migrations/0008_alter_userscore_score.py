@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userscore',
             name='score',
-            field=models.PositiveSmallIntegerField(validators=[pms.models.score_validator]),
+            field=models.PositiveSmallIntegerField(),
         ),
     ]

@@ -5,15 +5,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-def score_validator(value):
-    # This validator is currently not correctly accessing the instance
-    # We'll need to modify it to work with the model's clean method instead
-    if value < 0:
-        raise ValidationError(
-            _("Score cannot be negative"),
-            params={"value": value},
-        )
-
 class Level(models.Model):
     name  = models.CharField(max_length=50)
 
@@ -73,11 +64,10 @@ class Metric(models.Model):
 class UserScore(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
-    score = models.PositiveSmallIntegerField(validators=[score_validator])
+    score = models.PositiveSmallIntegerField()
     evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
 
     def clean(self):
-    # Move the metric weight validation to the clean method
         if self.score > self.metric.metric_weight:
             raise ValidationError({
                 'score': _("Score (%(value)s) cannot be greater than the metric weight (%(weight)s)") % {
@@ -87,5 +77,31 @@ class UserScore(models.Model):
             })
 
     def save(self, *args, **kwargs):
-        self.full_clean()  # This will run the validators
+        self.full_clean()
         super().save(*args, **kwargs)
+
+class Approval(models.Model):
+    employee = models.CharField(max_length=20)
+    hr_approval = models.BooleanField(default=False)
+    hr = models.ForeignKey(User, on_delete=models.CASCADE)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.evaluation} for {self.employee} approved by {self.hr}"
+    
+
+class FinalScore(models.Model):
+    SCORE_CHOICES = [
+        ('A+', 'A+'),
+        ('A', 'A'),
+        ('B+', 'B+'),
+        ('B', 'B'),
+        ('C', 'C')
+    ]
+    employee = models.CharField(max_length=20)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
+    final_score = models.IntegerField()
+    score = models.CharField(max_length=2, choices=SCORE_CHOICES)
+
+    def __str__(self):
+        return f"{self.employee} score is {self.score} in {self.evaluation.name}"

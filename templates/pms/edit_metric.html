@@ -2,23 +2,23 @@
 {% load custom_filters %}
 
 {% block title %}
-    Add Metric
+    Update Metric
 {% endblock %}
 
 {% block extra_head %}
-    <!-- Optionally, add extra styles or scripts here -->
+    <!-- Optional: Include additional styles or scripts if needed -->
 {% endblock %}
 
 {% block body %}
 {% if user.is_staff %}
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h4>Add New Metric</h4>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-edit"></i> Update Metric</h4>
         </div>
         <div class="card-body">
-            <!-- Metric Form -->
-            <form method="post">
+            <!-- Form for updating metric -->
+            <form method="post" class="needs-validation" novalidate>
                 {% csrf_token %}
                 
                 <!-- Metric Name -->
@@ -33,15 +33,22 @@
                     {{ form.metric_weight|add_class:"form-control" }}
                 </div>
 
-                <!-- Category Selection -->
+                <!-- Category -->
                 <div class="form-group">
                     <label for="id_category">Category</label>
                     {{ form.category|add_class:"form-control" }}
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-success">Save Metric</button>
-                <a href="{% url 'metrics' %}" class="btn btn-secondary">Cancel</a>
+                <div class="form-group text-right">
+                    <!-- Save Button -->
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <!-- Cancel Button -->
+                    <a href="{% url 'metrics' %}" class="btn btn-secondary ml-2">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
             </form>
         </div>
     </div>

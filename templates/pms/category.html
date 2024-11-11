@@ -1,15 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Category</title>
-</head>
-<body>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-</body>
-</html>
+{% extends 'pms/base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    Add Category
+{% endblock %}
+
+{% block extra_head %}
+    <!-- Optionally, add extra styles or scripts -->
+{% endblock %}
+
+{% block body %}
+{% if user.is_staff %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Add New Category</h4>
+        </div>
+        <div class="card-body">
+            <!-- Category Form -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_name">Category Name</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="id_weight">Weight</label>
+                    {{ form.weight|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="id_template">Templates</label>
+                    {{ form.template|add_class:"form-control" }}
+                </div>
+
+                <button type="submit" class="btn btn-success">Save Category</button>
+                <a href="{% url 'categories' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
