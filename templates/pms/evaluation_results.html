@@ -65,14 +65,15 @@
 
                 <!-- Manager Approval styled as signature -->
                 <tr>
+                    <!--Add styles directly to use the same font for printer-->
                     <th>Manager Approval</th>
-                    <td class="signature">{{ evaluation.evaluator }}</td>
+                    <td class="signature", style="font-family: 'Brush Script MT', cursive, sans-serif; font-weight: bold; font-size:25px; text-decoration: underline;">{{ evaluation.evaluator }}</td>
                 </tr>
 
                 <!-- HR Approval styled as signature -->
                 <tr>
                     <th>HR Approval</th>
-                    <td class="signature">{{ approval.hr }}</td>
+                    <td class="signature", style="font-family: 'Brush Script MT', cursive, sans-serif; font-weight: bold; font-size:25px; text-decoration: underline;">{{ approval.hr }}</td>
                 </tr>
             </table>
             <!-- Print Button -->
@@ -129,13 +130,13 @@
             printWindow.document.write('<html><head><title>Print</title>');
             printWindow.document.write('<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
             printWindow.document.write('</head><body>');
-            printWindow.document.write(document.getElementById('employee-details').outerHTML); // Copy the employee table
-            printWindow.document.write(document.getElementById('evaluation-details').outerHTML); // Copy the evaluation table
+            printWindow.document.write(document.getElementById('employee-details').outerHTML); 
+            printWindow.document.write(document.getElementById('evaluation-details').outerHTML); 
             printWindow.document.write('</body></html>');
             
-            printWindow.document.close(); // Close the document
-            printWindow.print(); // Trigger the print dialog
-            printWindow.close(); // Close the print window after printing
+            printWindow.document.close(); 
+            printWindow.print(); 
+            printWindow.close(); 
         }
     </script>
 {% endblock %}
