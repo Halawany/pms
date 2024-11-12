@@ -75,16 +75,12 @@
                     <td class="signature">{{ approval.hr }}</td>
                 </tr>
             </table>
+            <!-- Print Button -->
+            <button class="btn btn-secondary mt-3" onclick="printPage()">Print</button>
         {% else %}
             <div class="alert alert-info">No evaluation found for this employee.</div>
         {% endif %}
-    {% else %}
-        <div class="alert alert-info">No employee found with the given HR Code.</div>
     {% endif %}
-
-    <!-- Print Button -->
-    <button class="btn btn-secondary mt-3" onclick="printPage()">Print</button>
-</div>
 
 {% endblock %}
 

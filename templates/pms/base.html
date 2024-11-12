@@ -167,7 +167,6 @@
             </ul>
         </div>
     </div>
-    {% endif %}
     <div class="section mt-3">
         <form action="{% url 'logout' %}" method="post" class="d-inline">
             {% csrf_token %}
@@ -177,10 +176,12 @@
         </form>
     </div>
     {% endif %}
+    {% endif %}
+    
     <!-- Add a new Sidebar Section for searching employees -->
 <div class="section mt-3">
-    <h5 class="mt-3" data-toggle="collapse" data-target="#search_employee">
-        <i class="fas fa-search icon"></i> Search Employee Evaluation
+    <h6 class="mt-3" data-toggle="collapse" data-target="#search_employee">
+        <i class="fas fa-search icon"></i> Search Employee
     </h5>
     <div id="search_employee" class="collapse">
         <ul class="list-unstyled">
@@ -192,6 +193,15 @@
         </ul>
     </div>
 </div>
+{% if not user.is_authenticated %}
+<div class="section mt-3">
+        <button type="submit" class="sidebar-link btn btn-link">
+            <a href="{% url 'login' %}">
+            <i class="fas fa-sign-out-alt icon"></i> Login
+        </a>
+        </button>
+</div>
+{% endif %}
 </div>
 
 

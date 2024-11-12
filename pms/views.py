@@ -13,7 +13,7 @@ class EmployeeCreateView(UserPassesTestMixin, CreateView):
     model = Employee
     template_name = "pms/add-employee.html"
     form_class = EmployeeInsertForm
-    success_url = reverse_lazy('employee-list') 
+    success_url = reverse_lazy('employees') 
 
     # Add levels to context
     def get_context_data(self, **kwargs):
@@ -288,7 +288,7 @@ def hr_approval(request, employee_id):
         employee=employee.hr_code,
         evaluation=evaluation,
         final_score=total_score,
-        score=assign_grade(total_score)  # assign_grade is a function you can create to assign grades like A, B, etc.
+        score=assign_grade(total_score)
     )
 
     messages.success(request, f"HR Approval granted for {employee.full_name}. Final score: {final_score_record.score}.")
@@ -358,7 +358,7 @@ def get_approval(request, employee_id):
     except Exception as e:
         return HttpResponse(f"Error loading approval: {str(e)}")
 
-@login_required
+# @login_required
 def evaluation_results(request):
         hr_code = request.GET.get('hr_code')
         if not hr_code:

@@ -9,7 +9,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path('login/', auth_views.LoginView.as_view(form_class=CustomLoginForm), name='login'),
+    path('accounts/login/', auth_views.LoginView.as_view(form_class=CustomLoginForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('employees/add/', EmployeeCreateView.as_view(), name='add-employee'),
     path('add-template', TemplateCreateView.as_view(), name='add-template'),
